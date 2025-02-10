@@ -52,9 +52,9 @@ SELECT id, owner, balance, currency, created_at FROM accounts
 WHERE id = $1
 `
 
-func (q *Queries) GetTransfer(ctx context.Context, id int64) (Accounts, error) {
+func (q *Queries) GetTransfer(ctx context.Context, id int64) (Account, error) {
 	row := q.db.QueryRowContext(ctx, getTransfer, id)
-	var i Accounts
+	var i Account
 	err := row.Scan(
 		&i.ID,
 		&i.Owner,
