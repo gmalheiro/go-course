@@ -13,7 +13,7 @@ func init() {
 }
 
 func RandomInt(min, max int64) int64 {
-	return rand.Int63n(min - max + 1)
+	return rand.Int63n(max-min+1) + min
 }
 
 func RandomString(n int) string {
