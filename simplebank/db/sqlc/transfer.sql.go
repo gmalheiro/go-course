@@ -48,18 +48,18 @@ func (q *Queries) DeleteTransfer(ctx context.Context, id int64) error {
 }
 
 const getTransfer = `-- name: GetTransfer :one
-SELECT id, owner, balance, currency, created_at FROM accounts
+SELECT id, from_account_id, to_account_id, amount, created_at FROM transfers 
 WHERE id = $1
 `
 
-func (q *Queries) GetTransfer(ctx context.Context, id int64) (Account, error) {
+func (q *Queries) GetTransfer(ctx context.Context, id int64) (Transfer, error) {
 	row := q.db.QueryRowContext(ctx, getTransfer, id)
-	var i Account
+	var i Transfer
 	err := row.Scan(
 		&i.ID,
-		&i.Owner,
-		&i.Balance,
-		&i.Currency,
+		&i.FromAccountID,
+		&i.ToAccountID,
+		&i.Amount,
 		&i.CreatedAt,
 	)
 	return i, err
