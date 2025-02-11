@@ -9,7 +9,7 @@ import (
 	"github.com/gmalheirog/go-course/util"
 )
 
-func TestCreateTransfer(t *testing.T) Transfer {
+func TestCreateTransfer(t *testing.T) {
 	account1 := createRandomAccount(t)
 	account2 := createRandomAccount(t)
 
@@ -29,5 +29,4 @@ func TestCreateTransfer(t *testing.T) Transfer {
 
 	require.NotZero(t, transfer.ID)
 	require.NotZero(t, transfer.CreatedAt)
-	return transfer
 }
