@@ -25,9 +25,9 @@ type CreateTransferParams struct {
 	Amount        int64 `json:"amount"`
 }
 
-func (q *Queries) CreateTransfer(ctx context.Context, arg CreateTransferParams) (Transfers, error) {
+func (q *Queries) CreateTransfer(ctx context.Context, arg CreateTransferParams) (Transfer, error) {
 	row := q.db.QueryRowContext(ctx, createTransfer, arg.FromAccountID, arg.ToAccountID, arg.Amount)
-	var i Transfers
+	var i Transfer
 	err := row.Scan(
 		&i.ID,
 		&i.FromAccountID,
@@ -48,18 +48,18 @@ func (q *Queries) DeleteTransfer(ctx context.Context, id int64) error {
 }
 
 const getTransfer = `-- name: GetTransfer :one
-SELECT id, owner, balance, currency, created_at FROM accounts
+SELECT id, from_account_id, to_account_id, amount, created_at FROM transfers 
 WHERE id = $1
 `
 
-func (q *Queries) GetTransfer(ctx context.Context, id int64) (Account, error) {
+func (q *Queries) GetTransfer(ctx context.Context, id int64) (Transfer, error) {
 	row := q.db.QueryRowContext(ctx, getTransfer, id)
-	var i Account
+	var i Transfer
 	err := row.Scan(
 		&i.ID,
-		&i.Owner,
-		&i.Balance,
-		&i.Currency,
+		&i.FromAccountID,
+		&i.ToAccountID,
+		&i.Amount,
 		&i.CreatedAt,
 	)
 	return i, err
@@ -77,15 +77,15 @@ type ListTransferParams struct {
 	Offset int32 `json:"offset"`
 }
 
-func (q *Queries) ListTransfer(ctx context.Context, arg ListTransferParams) ([]Transfers, error) {
+func (q *Queries) ListTransfer(ctx context.Context, arg ListTransferParams) ([]Transfer, error) {
 	rows, err := q.db.QueryContext(ctx, listTransfer, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Transfers
+	var items []Transfer
 	for rows.Next() {
-		var i Transfers
+		var i Transfer
 		if err := rows.Scan(
 			&i.ID,
 			&i.FromAccountID,
@@ -118,9 +118,9 @@ type UpdateTransferParams struct {
 	Amount int64 `json:"amount"`
 }
 
-func (q *Queries) UpdateTransfer(ctx context.Context, arg UpdateTransferParams) (Transfers, error) {
+func (q *Queries) UpdateTransfer(ctx context.Context, arg UpdateTransferParams) (Transfer, error) {
 	row := q.db.QueryRowContext(ctx, updateTransfer, arg.ID, arg.Amount)
-	var i Transfers
+	var i Transfer
 	err := row.Scan(
 		&i.ID,
 		&i.FromAccountID,

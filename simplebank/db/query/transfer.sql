@@ -8,7 +8,7 @@ INSERT INTO transfers (
 ) RETURNING *;
 
 -- name: GetTransfer :one
-SELECT * FROM accounts
+SELECT * FROM transfers 
 WHERE id = $1;
 
 -- name: ListTransfer :many
