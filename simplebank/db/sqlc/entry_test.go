@@ -45,3 +45,23 @@ func TestGetEntry(t *testing.T) {
 	require.Equal(t, entryInDb.AccountID, entry.AccountID)
 	require.Equal(t, entryInDb.ID, entry.ID)
 }
+
+func TestUpdateEntry(t *testing.T) {
+	entry := createRandomEntry(t)
+
+	arg := UpdateEntryParams{
+		ID:     entry.ID,
+		Amount: util.RandomMoney(),
+	}
+
+	entryInDb, err := testQueries.UpdateEntry(context.Background(), arg)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, entryInDb)
+	require.NotZero(t, entryInDb.CreatedAt)
+	require.NotZero(t, entryInDb.ID)
+
+	require.Equal(t, entryInDb.ID, entry.ID)
+	require.Equal(t, entryInDb.AccountID, entry.AccountID)
+	require.Equal(t, entryInDb.Amount, arg.Amount)
+}
