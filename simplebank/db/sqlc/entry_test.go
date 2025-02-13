@@ -29,6 +29,6 @@ func createRandomEntry(t *testing.T) Entry {
 	return entry
 }
 
-func TestEntry(t *testing.T) {
+func TestCreateEntry(t *testing.T) {
 	createRandomEntry(t)
 }
