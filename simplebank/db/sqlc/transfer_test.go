@@ -79,3 +79,24 @@ func TestDeleteTransfer(t *testing.T) {
 
 	require.Empty(t, transferInDb)
 }
+
+func TestGetAllTransfers(t *testing.T) {
+	for i := 0; i < 5; i++ {
+		createRandomTransfer(t, createRandomAccount(t), createRandomAccount(t))
+	}
+
+	arg := ListTransferParams{
+		Offset: 5,
+		Limit:  5,
+	}
+
+	transfers, err := testQueries.ListTransfer(context.Background(), arg)
+
+	require.NoError(t, err)
+
+	require.Len(t, transfers, 5)
+
+	for _, transfer := range transfers {
+		require.NotEmpty(t, transfer)
+	}
+}
