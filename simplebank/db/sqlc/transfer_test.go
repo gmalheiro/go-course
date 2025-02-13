@@ -10,7 +10,9 @@ import (
 	"github.com/gmalheirog/go-course/util"
 )
 
-func createRandomTransfer(t *testing.T, account1 Account, account2 Account) Transfer {
+func createRandomTransfer(t *testing.T) Transfer {
+	account1 := createRandomAccount(t)
+	account2 := createRandomAccount(t)
 	arg := CreateTransferParams{
 		FromAccountID: account1.ID,
 		ToAccountID:   account2.ID,
@@ -31,13 +33,11 @@ func createRandomTransfer(t *testing.T, account1 Account, account2 Account) Tran
 }
 
 func TestCreateTransfer(t *testing.T) {
-	account1 := createRandomAccount(t)
-	account2 := createRandomAccount(t)
-	createRandomTransfer(t, account1, account2)
+	createRandomTransfer(t)
 }
 
 func TestGetTransfer(t *testing.T) {
-	transfer := createRandomTransfer(t, createRandomAccount(t), createRandomAccount(t))
+	transfer := createRandomTransfer(t)
 	transferInDb, err := testQueries.GetTransfer(context.Background(), transfer.ID)
 
 	require.NoError(t, err)
@@ -51,7 +51,7 @@ func TestGetTransfer(t *testing.T) {
 }
 
 func TestUpdateTransfer(t *testing.T) {
-	transfer := createRandomTransfer(t, createRandomAccount(t), createRandomAccount(t))
+	transfer := createRandomTransfer(t)
 
 	arg := UpdateTransferParams{
 		ID:     transfer.ID,
@@ -68,7 +68,7 @@ func TestUpdateTransfer(t *testing.T) {
 }
 
 func TestDeleteTransfer(t *testing.T) {
-	transfer := createRandomTransfer(t, createRandomAccount(t), createRandomAccount(t))
+	transfer := createRandomTransfer(t)
 
 	err := testQueries.DeleteTransfer(context.Background(), transfer.ID)
 
@@ -82,7 +82,7 @@ func TestDeleteTransfer(t *testing.T) {
 
 func TestGetAllTransfers(t *testing.T) {
 	for i := 0; i < 5; i++ {
-		createRandomTransfer(t, createRandomAccount(t), createRandomAccount(t))
+		createRandomTransfer(t)
 	}
 
 	arg := ListTransferParams{
