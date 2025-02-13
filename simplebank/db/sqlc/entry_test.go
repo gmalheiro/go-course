@@ -78,3 +78,24 @@ func TestDeleteEntry(t *testing.T) {
 	require.Error(t, err, sql.ErrNoRows.Error())
 	require.Empty(t, entryInDb)
 }
+
+func TestListEntry(t *testing.T) {
+	for i := 0; i < 5; i++ {
+		createRandomEntry(t)
+	}
+
+	arg := ListEntriesParams{
+		Offset: 5,
+		Limit:  5,
+	}
+
+	entries, err := testQueries.ListEntries(context.Background(), arg)
+
+	require.NoError(t, err)
+	require.Len(t, entries, 5)
+
+	for _, entry := range entries {
+		require.NotEmpty(t, entry)
+	}
+
+}
