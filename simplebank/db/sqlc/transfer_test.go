@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -64,4 +65,17 @@ func TestUpdateTransfer(t *testing.T) {
 
 	require.Equal(t, updatedTransfer.ID, transfer.ID)
 	require.Equal(t, updatedTransfer.Amount, arg.Amount)
+}
+
+func TestDeleteTransfer(t *testing.T) {
+	transfer := createRandomTransfer(t, createRandomAccount(t), createRandomAccount(t))
+
+	err := testQueries.DeleteTransfer(context.Background(), transfer.ID)
+
+	require.NoError(t, err)
+
+	transferInDb, err := testQueries.GetTransfer(context.Background(), transfer.ID)
+	require.Error(t, err, sql.ErrNoRows.Error())
+
+	require.Empty(t, transferInDb)
 }
