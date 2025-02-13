@@ -48,3 +48,20 @@ func TestGetTransfer(t *testing.T) {
 	require.Equal(t, transferInDb.ToAccountID, transfer.ToAccountID)
 	require.Equal(t, transferInDb.Amount, transfer.Amount)
 }
+
+func TestUpdateTransfer(t *testing.T) {
+	transfer := createRandomTransfer(t, createRandomAccount(t), createRandomAccount(t))
+
+	arg := UpdateTransferParams{
+		ID:     transfer.ID,
+		Amount: util.RandomMoney(),
+	}
+
+	updatedTransfer, err := testQueries.UpdateTransfer(context.Background(), arg)
+
+	require.NoError(t, err)
+	require.NotZero(t, updatedTransfer)
+
+	require.Equal(t, updatedTransfer.ID, transfer.ID)
+	require.Equal(t, updatedTransfer.Amount, arg.Amount)
+}
