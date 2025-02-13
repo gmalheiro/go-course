@@ -32,3 +32,16 @@ func createRandomEntry(t *testing.T) Entry {
 func TestCreateEntry(t *testing.T) {
 	createRandomEntry(t)
 }
+
+func TestGetEntry(t *testing.T) {
+	entry := createRandomEntry(t)
+
+	entryInDb, err := testQueries.GetEntry(context.Background(), entry.ID)
+	require.NoError(t, err)
+	require.NotEmpty(t, entryInDb)
+	require.NotZero(t, entryInDb.ID)
+
+	require.Equal(t, entryInDb.Amount, entry.Amount)
+	require.Equal(t, entryInDb.AccountID, entry.AccountID)
+	require.Equal(t, entryInDb.ID, entry.ID)
+}
