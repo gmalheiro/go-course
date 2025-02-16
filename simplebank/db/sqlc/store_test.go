@@ -59,5 +59,7 @@ func TestTransferTx(t *testing.T) {
 		require.NotZero(t, fromEntry.ID)
 		require.NotZero(t, fromEntry.CreatedAt)
 
+		_, err = store.GetTransfer(context.Background(), fromEntry.ID)
+		require.NoError(t, err)
 	}
 }
